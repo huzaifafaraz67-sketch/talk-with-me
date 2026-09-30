@@ -4,9 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>b3e0Kh - Secure Calling Engine</title>
+  
+  <!-- Inline SVG Favicon to eliminate 404 error -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📞</text></svg>">
+  
+  <!-- PeerJS WebRTC Library -->
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: #0b0f19;
@@ -18,9 +28,21 @@
       justify-content: space-between;
       padding: 16px;
     }
-    .header { text-align: center; margin-top: 10px; }
-    .room-title { font-size: 1.1rem; color: #38bdf8; font-weight: bold; letter-spacing: 2px; }
-    .status { font-size: 0.85rem; color: #94a3b8; margin-top: 4px; }
+    .header {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .room-title {
+      font-size: 1.1rem;
+      color: #38bdf8;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+    .status {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
     .video-container {
       position: relative;
       width: 100%;
@@ -34,7 +56,11 @@
       overflow: hidden;
       background: #1e293b;
     }
-    #remoteVideo { width: 100%; height: 100%; object-fit: cover; }
+    #remoteVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
     #localVideo {
       position: absolute;
       top: 16px;
@@ -45,10 +71,25 @@
       border-radius: 12px;
       border: 2px solid #38bdf8;
       background: #0f172a;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
-    .controls { display: flex; gap: 16px; margin-bottom: 20px; }
-    .btn { padding: 12px 24px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; }
-    .end-btn { background-color: #ef4444; color: #fff; }
+    .controls {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      padding: 12px 24px;
+      border-radius: 50px;
+      border: none;
+      font-weight: bold;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .end-btn {
+      background-color: #ef4444;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
@@ -81,7 +122,7 @@
     } else {
       roomDisplay.innerText = `ROOM: ${roomCode.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3')}`;
 
-      // Free Google STUN servers to bypass NAT/firewall restrictions
+      // Free Google STUN servers for cross-network connectivity
       const peerConfig = {
         config: {
           iceServers: [
@@ -114,7 +155,7 @@
             });
           });
 
-          // If HOST ID is already taken, connect as GUEST
+          // If HOST ID is taken, connect as GUEST to the HOST
           peer.on('error', (err) => {
             if (err.type === 'unavailable-id') {
               statusText.innerText = "Host found! Connecting call...";
